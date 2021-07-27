@@ -11,6 +11,7 @@ JsonParser::JsonParser(const std::u32string& _source):
 }
 
 void JsonParser::setupParsers() {
+	/* PARSER PROTOTYPES */
 	parsers.push_back(new JsonNull);
 	parsers.push_back(new JsonBool);
 	parsers.push_back(new JsonFloat);
@@ -54,6 +55,7 @@ void JsonParser::impl_setSource(const std::u32string& _source) {
 }
 
 JsonParser& JsonParser::getInstance() {
+	// creation of one static instance for the whole global namespace
 	static JsonParser instance;
 	return instance;
 }

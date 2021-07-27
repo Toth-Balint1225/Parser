@@ -3,6 +3,12 @@
 
 #include <ostream>
 
+/**
+ * stolen code from stackOverflow
+ * used to print UTF-32 strings and characters
+ * Linux terminal specific
+ * */
+
 class Utf8Printer {
 public:
 	static char* char_utf32_to_utf8(char32_t utf32, const char* buffer);

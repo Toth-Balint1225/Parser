@@ -5,6 +5,7 @@ JsonInt::JsonInt(): value(0) {}
 JsonInt::JsonInt(int _value): value(_value) {}
 
 JsonResult JsonInt::parse(std::u32string::iterator input) {
+	// clears whitespaces
 	input = Parser::yankWhitespace(input);
 	IntResult res = Parser::parseInt(input);
 	if (res.has_value()) 

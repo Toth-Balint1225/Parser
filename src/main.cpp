@@ -32,12 +32,9 @@ needed
 - some way to get the next symbol
 */
 
-#include "utf8printer.h"
 #include <iostream>
-#include <list>
-#include <map>
-#include <optional>
 
+#include "utf8printer.h"
 #include "jsonparser.h"
 
 // TODO these 2 functions need to be here, otherwise it will not compile
@@ -61,17 +58,19 @@ std::ostream& operator<<(std::ostream& os, const std::u32string& s)
 
 std::ostream& operator<<(std::ostream& os, char32_t c) 
 {
-	const char buffer[0] {0};
+	const char buffer[5] {0};
 	Utf8Printer::char_utf32_to_utf8(c,buffer);
 	os << buffer;
 	return os;
 }
 
 int main() {
-	std::u32string src = U"1.23";
-	CharResult res = Parser::parseFloat(src.begin());
+	std::u32string src = U"[null, [null]]";
+	JsonResult res = JsonParser::parse(src.begin());
 	if (res.has_value()) {
-		std::cout << res.value().first << std::endl;
+		std::cout << "OK" << std::endl;
+		JsonArray* arr = (JsonArray*)res.value().first;
+		delete arr;
 	} else {
 		std::cout << "ERROR" << std::endl;
 	}

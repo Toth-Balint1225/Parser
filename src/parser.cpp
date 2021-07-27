@@ -1,5 +1,6 @@
 #include "parser.h"
 
+// private functions -----------------------------------------------------
 std::string Parser::u32_to_ascii(std::u32string const &s) {
 	std::string out;
 	std::transform(begin(s), end(s), back_inserter(out), [](char32_t c) {
@@ -11,7 +12,9 @@ std::string Parser::u32_to_ascii(std::u32string const &s) {
 int Parser::u32toi(std::u32string const &s) { return std::stoi(u32_to_ascii(s)); }
 float Parser::u32tof(std::u32string const &s) { return std::stof(u32_to_ascii(s)); }
 
-CharResult Parser::parseCharacter(std::u32string::iterator input, char ref) {
+// public functions ------------------------------------------------------
+
+CharResult Parser::parseCharacter(std::u32string::iterator input, char32_t ref) {
 	if (ref == *input) {
 		return std::make_pair(ref,++input);
 	} else {
@@ -32,9 +35,10 @@ StringResult Parser::parseString(std::u32string::iterator input, const std::u32s
 
 StringResult Parser::parseString(std::u32string::iterator input) {
 	std::u32string buffer = U"";
-	std::list<char> except = {'\"','<','>','\0'};
+	// non-string characters defined here
+	std::list<char32_t> except = {U'\"',U'<',U'>',U'\0'};
 	while (std::find(except.begin(),except.end(),*input) != except.end()) {
-		buffer.append(sizeof(char),*input);
+		buffer.append(sizeof(char32_t),*input);
 		++input;
 	}
 	if (!buffer.empty())
@@ -44,9 +48,10 @@ StringResult Parser::parseString(std::u32string::iterator input) {
 }
 
 CharResult Parser::parseDigit(std::u32string::iterator input) {
-	std::list<char> chars = {'1','2','3','4','5','6','7','8','9','0'};
+	// decimal digit characters defined here
+	std::list<char32_t> chars = {U'1',U'2',U'3',U'4',U'5',U'6',U'7',U'8',U'9',U'0'};
 	if (std::find(chars.begin(),chars.end(),*input) != chars.end()) {
-		char res = *input;
+		char32_t res = *input;
 		return std::make_pair(res,++input);
 	} else { 
 		return {};
@@ -54,7 +59,9 @@ CharResult Parser::parseDigit(std::u32string::iterator input) {
 }
 
 CharResult Parser::parseWhitespace(std::u32string::iterator input) {
-	const char chars[] = {'\t','\n',' '};
+	// whitespace characters defined here
+	// TODO refactor to use stl
+	const char32_t chars[] = {U'\t',U'\n',U' '};
 	bool whitespace = false;
 	bool character = false;
 	do {
@@ -70,7 +77,7 @@ CharResult Parser::parseWhitespace(std::u32string::iterator input) {
 			whitespace = true;
 	} while (character);
 	if (whitespace) 
-		return std::make_pair(' ',input);
+		return std::make_pair(U' ',input);
 	else
 		return {};
 }
@@ -92,15 +99,18 @@ IntResult Parser::parseInt(std::u32string::iterator input) {
 
 FloatResult Parser::parseFloat(std::u32string::iterator input) {
 	std::u32string buffer = U"";
+	// number checking
 	CharResult tmp = parseDigit(input);
 	while (tmp.has_value()) {
 		buffer.append(sizeof(char),tmp.value().first);
 		input = tmp.value().second;
 		tmp = parseDigit(input);
 	}
-	tmp = parseCharacter(input,'.');
+	// decimal dot checking
+	tmp = parseCharacter(input,U'.');
 	if (!tmp.has_value())
 		return {};
+	
 	while (tmp.has_value()) {
 		buffer.append(sizeof(char),tmp.value().first);
 		input = tmp.value().second;

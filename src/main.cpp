@@ -63,8 +63,9 @@ std::ostream& operator<<(std::ostream& os, char32_t c)
 	os << buffer;
 	return os;
 }
-
+#include "jsonstring.h"
 int main() {
+	// json parser test
 	std::u32string src = U"[null, [null]]";
 	JsonResult res = JsonParser::parse(src.begin());
 	if (res.has_value()) {
@@ -75,5 +76,19 @@ int main() {
 		std::cout << "ERROR" << std::endl;
 	}
 
+	// string test
+	std::u32string strtest = U"hello";
+	StringResult strres = Parser::parseString(strtest.begin());
+	if (strres.has_value()) {
+		std::cout << "String OK" << std::endl;
+	} else {
+		std::cout << "String Failed" << std::endl;
+	}
+
+	// json string test
+	std::u32string jstr = U"\"hello\"";
+	JsonString parser;
+	JsonResult jstrres = parser.parse(jstr.begin());
+	std::cout << (jstrres.has_value() ? "JString OK" : "JString Failed") << std::endl;
 	return 0;
 }

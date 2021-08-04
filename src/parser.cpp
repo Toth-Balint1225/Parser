@@ -37,12 +37,12 @@ StringResult Parser::parseString(std::u32string::iterator input) {
 	std::u32string buffer = U"";
 	// non-string characters defined here
 	std::list<char32_t> except = {U'\"',U'<',U'>',U'\0'};
-	while (std::find(except.begin(),except.end(),*input) != except.end()) {
+	while (std::find(except.begin(),except.end(),*input) == except.end()) {
 		buffer.append(sizeof(char32_t),*input);
 		++input;
 	}
 	if (!buffer.empty())
-		std::make_pair(buffer,input);
+		return std::make_pair(buffer,input);
 	else
 		return std::nullopt;
 }

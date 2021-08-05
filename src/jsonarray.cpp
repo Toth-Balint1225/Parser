@@ -17,7 +17,7 @@ JsonResult JsonArray::parse(std::u32string::iterator input) {
 	input = Parser::yankWhitespace(input);
 	
 	// requires [ character
-	CharResult openBracket = Parser::parseCharacter(input,'[');
+	CharResult openBracket = Parser::parseCharacter(input,U'[');
 	if (!openBracket.has_value()) {
 		return {};
 	}
@@ -32,7 +32,7 @@ JsonResult JsonArray::parse(std::u32string::iterator input) {
 		// clear whitespaces
 		input = Parser::yankWhitespace(input);
 		// requires separator
-		CharResult separator = Parser::parseCharacter(input,',');
+		CharResult separator = Parser::parseCharacter(input,U',');
 		if (!separator.has_value()) {
 			break;
 		}
@@ -42,7 +42,7 @@ JsonResult JsonArray::parse(std::u32string::iterator input) {
 	}
 	input = Parser::yankWhitespace(input);
 	// clear whitespaces
-	CharResult closeBracket = Parser::parseCharacter(input,']');
+	CharResult closeBracket = Parser::parseCharacter(input,U']');
 	if (!closeBracket.has_value()) {
 		return {};
 	}

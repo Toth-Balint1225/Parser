@@ -16,7 +16,9 @@ void JsonParser::setupParsers() {
 	parsers.push_back(new JsonBool);
 	parsers.push_back(new JsonFloat);
 	parsers.push_back(new JsonInt);
+	parsers.push_back(new JsonString);
 	parsers.push_back(new JsonArray);
+	parsers.push_back(new JsonObject);
 }
 
 JsonParser::~JsonParser() {

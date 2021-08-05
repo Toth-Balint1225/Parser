@@ -10,6 +10,8 @@
 #include "jsonint.h"
 #include "jsonfloat.h"
 #include "jsonarray.h"
+#include "jsonstring.h"
+#include "jsonobject.h"
 
 /**
  * JsonParser:

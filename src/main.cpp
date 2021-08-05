@@ -63,7 +63,13 @@ std::ostream& operator<<(std::ostream& os, char32_t c)
 	os << buffer;
 	return os;
 }
+
 #include "jsonstring.h"
+#include "jsonobject.h"
+
+
+
+
 int main() {
 	// json parser test
 	std::u32string src = U"[null, [null]]";
@@ -90,5 +96,17 @@ int main() {
 	JsonString parser;
 	JsonResult jstrres = parser.parse(jstr.begin());
 	std::cout << (jstrres.has_value() ? "JString OK" : "JString Failed") << std::endl;
+	if (jstrres.has_value()) delete jstrres.value().first;
+
+	// json object test
+	std::u32string jobj = U"{\"foo\" : null, \"bar\":{\"baz\":[null,10]} }";
+	JsonObject objParser;
+	JsonResult objres = objParser.parse(jobj.begin());
+	if (objres.has_value()) {
+		std::cout << "JObject OK" << std::endl;
+		delete objres.value().first;
+	} else {
+		std::cout << "JObject Failed" << std::endl;
+	}
 	return 0;
 }

@@ -1,6 +1,5 @@
 #include "jsonobject.h"
 
-#include <iostream>
 JsonObject::JsonObject(const std::map<std::u32string,JsonSymbol*> _contents) {
 	for (auto it : _contents) {
 		contents.emplace(it);
@@ -14,40 +13,12 @@ JsonObject::~JsonObject() {
 	}
 }	
 
-StringResult JsonObject::parseKey(std::u32string::iterator input) {
-	// clear whitespace
-	input = Parser::yankWhitespace(input);
-	// expects "
-	CharResult openQuote = Parser::parseCharacter(input,U'\"');
-	if (!openQuote.has_value()) {
-		std::cout << "opening quote expected" << std::endl;
-		return std::nullopt;
-	}
-	input = openQuote.value().second;
-	// expects string
-	StringResult buffer = Parser::parseString(input);
-	if (!buffer.has_value()) {
-		std::cout << "string expected" << std::endl;
-		return std::nullopt;
-	}
-	input = buffer.value().second;
-	// expects "
-	CharResult closeQuote = Parser::parseCharacter(input,U'\"');
-	if (!closeQuote.has_value()) {
-		std::cout << "closing quote expected" << std::endl;
-		return std::nullopt;
-	}
-	input = closeQuote.value().second;
-	return std::make_pair(buffer.value().first,input);
-}
-
 PairResult JsonObject::parseKeyValue(std::u32string::iterator input) {
 	// clear whitespace
 	input = Parser::yankWhitespace(input);
 	// expects key
-	StringResult key = parseKey(input);
+	StringResult key = Parser::parseQuotedString(input);
 	if (!key.has_value()) {
-		std::cout << "key expected" << std::endl;
 		return std::nullopt;
 	}
 	input = key.value().second;
@@ -55,14 +26,12 @@ PairResult JsonObject::parseKeyValue(std::u32string::iterator input) {
 	input = Parser::yankWhitespace(input);
 	CharResult colon = Parser::parseCharacter(input,U':');
 	if (!colon.has_value()) {
-		std::cout << "colon expected" << std::endl;
 		return std::nullopt;
 	}
 	input = colon.value().second;
 	// expects value
 	JsonResult buffer = JsonParser::parse(input);
 	if (!buffer.has_value()) {
-		std::cout << "value expected" << std::endl;
 		return std::nullopt;
 	}
 	input = buffer.value().second;
@@ -78,7 +47,6 @@ JsonResult JsonObject::parse(std::u32string::iterator input) {
 	// expects {
 	CharResult openBrace = Parser::parseCharacter(input,U'{');
 	if (!openBrace.has_value()) {
-		std::cout << "open brace expected" << std::endl;
 		return std::nullopt;
 	}
 	input = openBrace.value().second;
@@ -106,7 +74,6 @@ JsonResult JsonObject::parse(std::u32string::iterator input) {
 	input = Parser::yankWhitespace(input);
 	CharResult closeBrace = Parser::parseCharacter(input,U'}');
 	if (!closeBrace.has_value()) {
-		std::cout << "closing brace expected" << std::endl;
 		return std::nullopt;
 	}
 	input = closeBrace.value().second;

@@ -66,10 +66,6 @@ std::ostream& operator<<(std::ostream& os, char32_t c)
 
 #include "jsonstring.h"
 #include "jsonobject.h"
-
-
-
-
 int main() {
 	// json parser test
 	std::u32string src = U"[null, [null]]";
@@ -99,7 +95,7 @@ int main() {
 	if (jstrres.has_value()) delete jstrres.value().first;
 
 	// json object test
-	std::u32string jobj = U"{\"foo\" : null, \"bar\":{\"baz\":[null,10]} }";
+	std::u32string jobj = U"{\"foo\" : null, \"bar\":{\"baz\":[null,10,\"I really don't know what's after baz\"]} }";
 	JsonObject objParser;
 	JsonResult objres = objParser.parse(jobj.begin());
 	if (objres.has_value()) {
@@ -108,5 +104,6 @@ int main() {
 	} else {
 		std::cout << "JObject Failed" << std::endl;
 	}
+
 	return 0;
 }

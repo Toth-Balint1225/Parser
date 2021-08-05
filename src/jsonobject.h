@@ -26,7 +26,6 @@ private:
 	/* inner value, the key has to be a quoted string */
 	std::map<std::u32string,JsonSymbol*> contents; 
 
-	StringResult parseKey(std::u32string::iterator input);
 	PairResult parseKeyValue(std::u32string::iterator input);
 public:
 	JsonObject() = default;

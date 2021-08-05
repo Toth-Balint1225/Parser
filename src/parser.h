@@ -72,6 +72,12 @@ public:
 	 * */
 	static StringResult parseString(std::u32string::iterator input);
 
+	/* parses a string in " quotes
+	 * requires a starting "
+	 * parses the string until the next " or \0, otherwise returns nullopt
+	 * */
+	static StringResult parseQuotedString(std::u32string::iterator input);
+
 	/* parses a digit
 	 * if the input starts with a decimal digit, then returns it
 	 * otherwise returns nullopt

@@ -47,6 +47,30 @@ StringResult Parser::parseString(std::u32string::iterator input) {
 		return std::nullopt;
 }
 
+StringResult Parser::parseQuotedString(std::u32string::iterator input) {
+	// clear whitespace
+	input = yankWhitespace(input);
+	// expects "
+	CharResult openQuote = parseCharacter(input,U'\"');
+	if (!openQuote.has_value()) {
+		return std::nullopt;
+	}
+	input = openQuote.value().second;
+	// expects string
+	StringResult buffer = parseString(input);
+	if (!buffer.has_value()) {
+		return std::nullopt;
+	}
+	input = buffer.value().second;
+	// expects "
+	CharResult closeQuote = parseCharacter(input,U'\"');
+	if (!closeQuote.has_value()) {
+		return std::nullopt;
+	}
+	input = closeQuote.value().second;
+	return std::make_pair(buffer.value().first,input);
+}
+
 CharResult Parser::parseDigit(std::u32string::iterator input) {
 	// decimal digit characters defined here
 	std::list<char32_t> chars = {U'1',U'2',U'3',U'4',U'5',U'6',U'7',U'8',U'9',U'0'};

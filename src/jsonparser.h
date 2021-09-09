@@ -47,9 +47,14 @@ private:
 /* Private API implementations */
 private:
 	/* typecheck for the next token */
-	bool impl_accept(JsonSymbol* s);
+	template <typename T>
+	bool impl_accept();
 	/* read in the next token from the string and update the position */
 	void impl_step();
+
+	template <typename T>
+	bool impl_expect();
+
 	/* multi-purpose helper function, technically enough for the whole class 
 	 * Factory method
 	 * */
@@ -63,8 +68,11 @@ public:
 	JsonParser(const JsonParser&) = delete; 
 	/* instantiation function (Singleton) */
 	static JsonParser& getInstance();
-	static bool accept(JsonSymbol *s);
+	template <typename T>
+	static bool accept();
 	static void step();
+	template <typename T>
+	static bool expect();
 	static JsonResult parse(std::u32string::iterator input);
 	static void setSource(const std::u32string& _source);
 };

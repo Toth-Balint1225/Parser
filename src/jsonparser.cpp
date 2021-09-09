@@ -28,8 +28,14 @@ JsonParser::~JsonParser() {
 	}
 }
 
-bool JsonParser::impl_accept(JsonSymbol* s) {
-	return false;
+template <typename T>
+bool JsonParser::impl_accept() {
+	if (typeid(T) == typeid(*next)) {
+		step();
+		return true;
+	} else {
+		return false;
+	}
 }
 
 void JsonParser::impl_step() {
@@ -43,13 +49,18 @@ void JsonParser::impl_step() {
 	}
 }
 
+template <typename T>
+bool JsonParser::impl_expect() {
+	return false;
+}
+
 JsonResult JsonParser::impl_parse(std::u32string::iterator input) {
 	for (auto p : parsers) {
 		JsonResult temp = p->parse(input);
 		if (temp.has_value())
 			return temp;
 	}
-	return {};
+	return std::nullopt;
 }
 void JsonParser::impl_setSource(const std::u32string& _source) {
 	source = _source;
@@ -62,12 +73,18 @@ JsonParser& JsonParser::getInstance() {
 	return instance;
 }
 
-bool JsonParser::accept(JsonSymbol* s) {
-	return getInstance().impl_accept(s);
+template <typename T>
+bool JsonParser::accept() {
+	return getInstance().impl_accept<T>();
 }
 
 void JsonParser::step() {
 	return getInstance().impl_step();
+}
+
+template <typename T>
+bool JsonParser::expect() {
+	return getInstance().impl_expect<T>();
 }
 
 JsonResult JsonParser::parse(std::u32string::iterator input) {
